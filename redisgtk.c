@@ -13,6 +13,11 @@
 
 #define SPECIALPID -99 /* Arbitrary number less than -1 */
 
+#define BOLD_RED    "\e[1;31m"
+#define BOLD_YELLOW "\e[1;33m"
+#define NORM_GREEN  "\e[0;32m"
+#define COLORS_OFF  "\e[0m"
+
 static GPid pid = SPECIALPID;
 
 static void window_destroy(GtkWidget* win, gpointer _);
@@ -42,7 +47,8 @@ start_server_btn_clicked(GtkWidget* btn, GtkWidget** widgets)
   GtkWidget* dumpfloc_entry = widgets[5];
 
   if (pid > 0) {
-    const char* msg = "\e[1;31m---(server is already running)---\e[0m\r\n";
+    const char* msg = BOLD_RED "---(server is already running)---"
+                      COLORS_OFF "\r\n";
     vte_terminal_feed(VTE_TERMINAL(terminal), msg, strlen(msg));
     return;
   }
@@ -68,13 +74,14 @@ start_server_btn_clicked(GtkWidget* btn, GtkWidget** widgets)
   /* Announce the command line. */
   int i = 0;
   while (argv[i] != NULL) {
-    vte_terminal_feed(VTE_TERMINAL(terminal), "\e[0;32m", 7);
+    vte_terminal_feed(VTE_TERMINAL(terminal), NORM_GREEN, strlen(NORM_GREEN));
     vte_terminal_feed(VTE_TERMINAL(terminal), argv[i], strlen(argv[i]));
     vte_terminal_feed(VTE_TERMINAL(terminal), " ", 1);
     i++;
   }
-
-  vte_terminal_feed(VTE_TERMINAL(terminal), "\e[0m\r\n", 6);
+  
+  vte_terminal_feed(VTE_TERMINAL(terminal), COLORS_OFF, strlen(COLORS_OFF));
+  vte_terminal_feed(VTE_TERMINAL(terminal), "\r\n\r\n", 4);
 
   /* The actual fork. */
   vte_terminal_fork_command_full(
@@ -93,10 +100,11 @@ static void
 stop_server_btn_clicked(GtkWidget* btn, GtkWidget** widgets)
 {
   GtkWidget* terminal = widgets[0];
-  const char* msg = "\e[1;33m---(killed)---\e[0m\r\n";
+  const char* msg = BOLD_YELLOW "---(killed)---" COLORS_OFF "\r\n";
 
   if (pid < 0) {
-    const char* msg = "\e[1;31m---(server is not yet running)---\e[0m\r\n";
+    const char* msg = BOLD_RED "---(server is not yet running)---"
+                      COLORS_OFF "\r\n";
     vte_terminal_feed(VTE_TERMINAL(terminal), msg, strlen(msg));
     return;
   }
