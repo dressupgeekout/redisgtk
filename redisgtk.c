@@ -63,11 +63,11 @@ start_server_btn_clicked(GtkWidget* btn, GtkWidget** widgets)
 
   char* argv[] = {
     REDIS_SERVER_LOC,
-    "--bind", gtk_entry_get_text(GTK_ENTRY(host_entry)),
-    "--port", gtk_entry_get_text(GTK_ENTRY(port_entry)),
-    "--timeout", gtk_entry_get_text(GTK_ENTRY(timeout_entry)),
+    "--bind", (char*)gtk_entry_get_text(GTK_ENTRY(host_entry)),
+    "--port", (char*)gtk_entry_get_text(GTK_ENTRY(port_entry)),
+    "--timeout", (char*)gtk_entry_get_text(GTK_ENTRY(timeout_entry)),
     "--databases", ndb,
-    "--dbfilename", gtk_entry_get_text(GTK_ENTRY(dumpfloc_entry)),
+    "--dbfilename", (char*)gtk_entry_get_text(GTK_ENTRY(dumpfloc_entry)),
     NULL
   };
 
